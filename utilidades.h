@@ -28,8 +28,8 @@ typedef struct EstadoRuta {
     int paquetes_totales;
     int capacidad_maxima; 
     
-    // Estado de la búsqueda
-    bool *hubs_activos;         // <--- ¡ESTE CAMPO DEBE ESTAR AQUÍ!
+    // Estado de la busqueda
+    bool *hubs_activos;        
     bool *paquetes_entregados;  
     bool *paquetes_en_camion;   
     int paquetes_cargados_count; 
@@ -37,7 +37,7 @@ typedef struct EstadoRuta {
     
     int ubicacion_actual_id;    
     
-    // Métrica y Ruta
+    // Metrica y Ruta
     double costo_total_parcial; 
     double costo_hubs_fijo;     
     double distancia_recorrida_parcial; 
@@ -49,10 +49,8 @@ typedef struct EstadoRuta {
 
 // --- FIRMAS DE FUNCIONES ---
 
-// Función para parsear el archivo caso.txt y llenar las estructuras
 Grafo *leer_archivo_entrada(const char *filename, Paquete **paquetes_out, int *num_paquetes_out, int *capacidad_out, int *num_hubs_out);
 
-// Función para generar el archivo de salida con el formato exacto requerido
 void generar_archivo_salida(const char *filename, SolucionOptima *solucion, double tiempo_ejecucion);
 
-#endif // UTILIDADES_H
+#endif 

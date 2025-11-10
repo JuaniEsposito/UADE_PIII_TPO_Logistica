@@ -5,14 +5,14 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/mi_programa.exe", // Asegúrate que el nombre sea correcto
-            "args": ["caso_pequeno.txt"], // <-- ARCHIVO DE PRUEBA: Cambia esto al nombre real de tu archivo de entrada
+            "program": "${workspaceFolder}/mi_programa.exe", 
+            "args": ["caso_pequeno.txt"], 
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
-            "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe", // <-- RUTA DE TU DEBUGGER MSYS2
+            "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe", 
             "setupCommands": [
                 {
                     "description": "Enable pretty printing for gdb",
@@ -20,7 +20,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "make" // Asegura que el proyecto se compile antes de depurar
+            "preLaunchTask": "make" 
         }
     ]
 }

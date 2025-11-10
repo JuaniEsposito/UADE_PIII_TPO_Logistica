@@ -1,7 +1,7 @@
 #include "grafo.h"
 #include <string.h>
 
-// --- GESTIÓN DE MEMORIA DEL GRAFO ---
+// --- GESTION DE MEMORIA DEL GRAFO ---
 
 Grafo *crear_grafo(int num_nodos, int num_hubs) {
     Grafo *g = (Grafo *)malloc(sizeof(Grafo));
@@ -47,22 +47,20 @@ void liberar_grafo(Grafo *g) {
 void dijkstra(Grafo *g, int inicio, double *distancias) {
     int n = g->num_nodos;
     
-    // Asignación de memoria: calloc inicializa todos los bytes a 0 (false)
+    // Asignacion de memoria
     bool *visitado = (bool *)calloc(n, sizeof(bool));
     
     if (visitado == NULL) {
-        // Falla la asignación de memoria
         return; 
     }
     
-    // Inicialización de distancias
+    // Inicializacion de distancias
     distancias[inicio] = 0.0;
     
     for (int count = 0; count < n - 1; count++) {
         double min = INFINITY_COST;
         int u = -1;
 
-        // Búsqueda del nodo no visitado con la menor distancia (extracción del mínimo)
         for (int v = 0; v < n; v++) {
             if (!visitado[v] && distancias[v] <= min) {
                 min = distancias[v];
@@ -70,11 +68,10 @@ void dijkstra(Grafo *g, int inicio, double *distancias) {
             }
         }
 
-        if (u == -1) break; // Todos los nodos alcanzables han sido visitados
+        if (u == -1) break; 
 
         visitado[u] = true;
 
-        // Relajación de aristas
         for (int v = 0; v < n; v++) {
             if (!visitado[v] 
                 && g->matriz_adyacencia[u][v] != INFINITY_COST
@@ -86,7 +83,6 @@ void dijkstra(Grafo *g, int inicio, double *distancias) {
         }
     }
 
-    // Liberación de memoria
     free(visitado); 
 }
 
@@ -99,7 +95,6 @@ void calcular_distancias_minimas(Grafo *g) {
 }
 
 double obtener_distancia_minima(Grafo *g, int origen_id, int destino_id) {
-    // Si los IDs no son válidos, devuelve un costo infinito
     if (origen_id < 0 || origen_id >= g->num_nodos || destino_id < 0 || destino_id >= g->num_nodos) {
         return INFINITY_COST;
     }

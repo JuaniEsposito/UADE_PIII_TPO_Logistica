@@ -23,12 +23,12 @@ typedef struct {
 double calcular_distancia(Nodo n1, Nodo n2);
 
 int main(int argc, char *argv[]) {
-    // --- 1. CONFIGURACIÓN Y PARSEO ---
+    // --- 1. CONFIGURACION Y PARSEO ---
     int num_nodos = 50;
     int num_hubs = 5;
     int num_paquetes = 30;
     int capacidad_camion = 8;
-    int deposito_id = 0; // Por convención, el depósito es el nodo 0
+    int deposito_id = 0; 
     unsigned int seed = 0;
 
     for (int i = 1; i < argc; i++) {
@@ -49,11 +49,9 @@ int main(int argc, char *argv[]) {
 
     if (seed == 0) seed = time(NULL);
     srand(seed);
-    // CORRECCIÓN: Imprimir a STDERR para que no contamine la redirección (>)
     fprintf(stderr, "Generador iniciado con semilla: %u\n", seed);
-    // clock_t inicio = clock();
     
-    // --- 2. LÓGICA DE GENERACIÓN ---
+    // --- 2. LOGICA DE GENERACION ---
     int **conectados = malloc(num_nodos * sizeof(int *));
     if (conectados == NULL) { fprintf(stderr, "Error de memoria.\n"); return 1; }
     for (int i = 0; i < num_nodos; i++) {
@@ -95,7 +93,6 @@ int main(int argc, char *argv[]) {
     }
 
     // --- 3. ESCRITURA DEL ARCHIVO DE SALIDA ---
-    // NO NECESITAMOS ABRIR UN ARCHIVO; ESCRIBIMOS DIRECTO A STDOUT
     FILE *fp = stdout; 
 
     fprintf(fp, "// --- CONFIGURACION ---\n");
@@ -124,16 +121,11 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < num_aristas; i++) {
         fprintf(fp, "%d %d %.2f\n", aristas[i].u, aristas[i].v, aristas[i].peso);
     }
-    // NO HACEMOS fclose(fp) porque es stdout.
 
     for (int i = 0; i < num_nodos; i++) {
         free(conectados[i]);
     }
     free(conectados);
-
-    // clock_t fin = clock();
-    // double tiempo_cpu_usado = ((double) (fin - inicio)) / CLOCKS_PER_SEC;
-    // fprintf(stderr, "Tiempo de generación: %f segundos.\n", tiempo_cpu_usado);
 
     return 0;
 }
