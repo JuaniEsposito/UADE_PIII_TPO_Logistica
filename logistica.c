@@ -3,16 +3,13 @@
 #include <string.h>
 #include <limits.h>
 
-// Definicion de la variable global para la poda
 SolucionOptima SOLUCION_GLOBAL;
 
-// FUNCION AUXILIAR DE PODA HEURISTICA
 
 double calcular_costo_minimo_restante(Grafo *g, Paquete *paquetes, EstadoRuta *estado) {
     double costo_restante = 0.0;
     int u = estado->ubicacion_actual_id;
 
-    // 1. Costo minimo para entregar todos los paquetes restantes.
     for (int p = 0; p < estado->paquetes_totales; p++) {
         if (!estado->paquetes_entregados[p]) {
             double dist = obtener_distancia_minima(g, u, paquetes[p].id_destino);
@@ -21,7 +18,6 @@ double calcular_costo_minimo_restante(Grafo *g, Paquete *paquetes, EstadoRuta *e
         }
     }
     
-    // 2. Costo minimo para regresar al deposito
     costo_restante += obtener_distancia_minima(g, u, DEPOSITO_ID);
     
     return costo_restante;
@@ -63,7 +59,6 @@ EstadoRuta *crear_estado_inicial(int capacidad, int paquetes_totales, int num_hu
     estado->distancia_recorrida_parcial = 0.0;
     estado->costo_total_parcial = 0.0;
     
-    // Ruta inicial-> se asigna espacio para una ruta larga
     estado->ruta_secuencia = (int *)malloc((2 * paquetes_totales + num_hubs) * sizeof(int));
     estado->ruta_secuencia[0] = DEPOSITO_ID;
     estado->largo_ruta = 1;
@@ -178,7 +173,7 @@ void explorar_hubs(Grafo *g, Paquete *paquetes, EstadoRuta *estado_base, int hub
             }
         }
         
-        // Si hay algo que entregar, iniciamos la busqueda
+        // Si hay algo que entregar iniciamos la busqueda
         if (ruta_estado->paquetes_cargados_count > 0) {
             buscar_ruta_optima(g, paquetes, ruta_estado);
         } else {
@@ -188,12 +183,12 @@ void explorar_hubs(Grafo *g, Paquete *paquetes, EstadoRuta *estado_base, int hub
         return;
     }
 
-    // Opcion 1: No activar el hub en 'hub_index'
+    // Opcion 1: No activar el hub en hub_index
     EstadoRuta *estado_no_activado = copiar_estado(estado_base);
     estado_no_activado->hubs_activos[hub_index] = false;
     explorar_hubs(g, paquetes, estado_no_activado, hub_index + 1);
     
-    // Opcion 2: Activar el hub en 'hub_index'
+    // Opcion 2: Activar el hub en hub_index
     EstadoRuta *estado_activado = copiar_estado(estado_base);
     estado_activado->hubs_activos[hub_index] = true;
     explorar_hubs(g, paquetes, estado_activado, hub_index + 1);
@@ -213,7 +208,6 @@ void buscar_ruta_optima(Grafo *g, Paquete *paquetes, EstadoRuta *estado_actual) 
         costo_estimado_total += calcular_costo_minimo_restante(g, paquetes, estado_actual);
     }
     
-    // Poda: Si el costo actual + la mejor estimacion restante supera el optimo global.
     if (costo_estimado_total >= SOLUCION_GLOBAL.costo_total_minimo) {
         liberar_estado(estado_actual);
         return;
@@ -224,7 +218,6 @@ void buscar_ruta_optima(Grafo *g, Paquete *paquetes, EstadoRuta *estado_actual) 
         int u = estado_actual->ubicacion_actual_id;
         double costo_vuelta = 0.0;
         
-        // Regreso al deposito si es necesario
         if (u != DEPOSITO_ID) {
             costo_vuelta = obtener_distancia_minima(g, u, DEPOSITO_ID);
         }
@@ -232,7 +225,6 @@ void buscar_ruta_optima(Grafo *g, Paquete *paquetes, EstadoRuta *estado_actual) 
         double costo_total_final = estado_actual->costo_total_parcial + costo_vuelta;
 
         if (costo_total_final < SOLUCION_GLOBAL.costo_total_minimo) {
-            // Actualizar la solucion global
             EstadoRuta *estado_final = copiar_estado(estado_actual);
             if (u != DEPOSITO_ID) {
                 estado_final->ruta_secuencia[estado_final->largo_ruta++] = DEPOSITO_ID;
@@ -261,12 +253,10 @@ void buscar_ruta_optima(Grafo *g, Paquete *paquetes, EstadoRuta *estado_actual) 
             siguiente->costo_total_parcial = siguiente->costo_hubs_fijo + siguiente->distancia_recorrida_parcial;
             siguiente->ubicacion_actual_id = v;
             
-            // Actualizacion de Paquetes
             siguiente->paquetes_entregados[p] = true;
             siguiente->paquetes_en_camion[p] = false;
             siguiente->paquetes_cargados_count--;
 
-            // Añadir a la ruta
             siguiente->ruta_secuencia[siguiente->largo_ruta++] = v;
             
             buscar_ruta_optima(g, paquetes, siguiente);
@@ -275,7 +265,6 @@ void buscar_ruta_optima(Grafo *g, Paquete *paquetes, EstadoRuta *estado_actual) 
 
     // B. Transicion: **INTERACCION CON DEPOSITO/HUBS** 
     
-    // I. Recarga en Deposito (ID 0)
     if (u == DEPOSITO_ID) { 
         if (estado_actual->paquetes_cargados_count < estado_actual->capacidad_maxima) {
             

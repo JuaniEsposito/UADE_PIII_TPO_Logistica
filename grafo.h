@@ -37,4 +37,4 @@ void liberar_grafo(Grafo *g);
 void calcular_distancias_minimas(Grafo *g);
 double obtener_distancia_minima(Grafo *g, int origen_id, int destino_id);
 
-#endif // GRAFO_H
+#endif
